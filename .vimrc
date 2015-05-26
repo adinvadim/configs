@@ -1,4 +1,5 @@
 "-------------------------
+"
 " Базовые настройки
 
 "-------------------------
@@ -9,6 +10,8 @@ set showcmd
 " Включаем перенос строк по буквам, а не по словам
 set wrap
 
+set shell=/bin/bash
+
 " Показывать все возможные кандидаты для выбора при авто-завершении команд в командной строке
 set wildmenu
 set wildmode=list:longest
@@ -16,11 +19,14 @@ set wildignore=.git,*.swp,*/tmp/*
 "set wcm=<TAB>
 
 " Оформление
-set t_Co=256
+set t_Co=255
 colorscheme solarized
-set background=light
+set background=dark
 let g:solarized_termcolors=16
 let g:solarized_visibility =  "low"
+autocmd ColorScheme * highlight RedundantSpaces ctermbg=red
+
+
 let g:signify_sign_weight = 'NONE'
 let g:signify_sign_color_inherit_from_linenr = 1
 
@@ -40,14 +46,20 @@ set hls
 set smartindent
 set autoindent
 " Влючить подстветку синтаксиса
-syntax on
+syntax enable
 
 " Размер табуляции
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 set list
-set list listchars=tab:>·,trail:·,extends:>,precedes:<
+set listchars=tab:>·,trail:·,extends:>,precedes:<
+
+set sessionoptions+=tabpages,globals
+set tabline=%!tabber#TabLine()
+
+" Backspace
+set backspace=indent,eol,start
 
 " По умолчанию латинская раскладка
 set iminsert=0
@@ -70,8 +82,10 @@ set statusline+=%c,     "cursor column
 set statusline+=%l/%L   "cursor line/total lines
 set statusline+=\ %P    "percent through file
 
-set statusline=%<%f%h%m%r\ \ %{&encoding}\ 0x\ \ %l,%c%V\ %P
 set showtabline=2
+set guitablabel=%t\ %M
+
+set statusline=%<%f%h%m%r\ \ %{&encoding}\ 0x\ \ %l,%c%V\ %P
 set noshowmode
 
 set laststatus=2   " Always show the statusline
@@ -136,7 +150,10 @@ set imsearch=0
 
 let mapleader=','
 
-map <C-n> :NERDTreeToggle<CR>
+" Tabs
+"nmap <C-t> :tabnew<cr>
+nmap <TAB> gt
+nmap <S-TAB> gT
 
 nmap <Space> <PageDown>
 nmap <cr> o<ESC>k
@@ -147,17 +164,19 @@ nmap <leader><space> :%s/\s\+$<cr>
 " switch between current and last buffer
 nmap <leader>. <c-^>
 
+
+
 imap <C-l> <Right>
 imap <C-h> <Left>
 imap <C-j> <Down>
 imap <C-k> <Up>
+imap <leader>
+
 
 vmap < <gv
 vmap > >gv
 
 nnoremap * *N
-inoremap jk <Esc>
-vnoremap jk <Esc>
 
 filetype plugin indent on     " обязательно!
 
@@ -189,9 +208,15 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'mhinz/vim-startify'
 Bundle 'kien/ctrlp.vim'
-"Bundle 'fweep/vim-tabber'
+Bundle 'fweep/vim-tabber'
 Bundle 'Raimondi/delimitMate'
 Bundle 'tpope/vim-surround'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'TagHighlight'
+"Bundle 'gcmt/taboo.vim'
+Bundle 'junegunn/limelight.vim'
+
+
 
 
 " Цветовые схемы
@@ -209,6 +234,11 @@ Bundle 'wavded/vim-stylus'
 "Настройка плагинов
 "-------------------------
 
+
+"NERDTree
+map <leader>n :NERDTreeToggle<CR>
+
+
 "Emmet
 let g:user_emmet_install_global = 0
 let g:user_emmet_leader_key = '<c-z>'
@@ -219,6 +249,7 @@ autocmd FileType html,css,styl,EmmetInstall
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
 let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_use_ultisnips_completer = 1
+let g:ycm_key_invoke_completion = '<leader><TAB>'
 
 nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
@@ -227,7 +258,6 @@ let g:Powerline_symbols = "fancy"
 
 " Startify
 set viminfo='100,n$HOME/.vim/viminfo
-"autocmd BufEnter * if !exists('t:startified') | Startify  | let t:startified = 1 | endif
 
 autocmd VimEnter *
 			\   if !argc()
@@ -259,12 +289,24 @@ let g:startify_skiplist = [
 	   \ ]
 
 " Stylus
-
 autocmd BufRead,BufNewFile *.styl set filetype=styl
 autocmd Syntax styl runtime! bundle/vim-stylus/syntax/stylus.vim
 autocmd FileType styl set omnifunc=csscomplete#CompleteCSS
 
 " TagBar
-nmap <F8> :TagbarToggle<CR>
+nmap <leader>t :TagbarToggle<CR>
 let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
+highlight TagbarSignature guifg=Red ctermfg=Red
 
+" Whitespace
+nmap <leader>w :StripWhitespace<CR>
+
+
+" CntrlP
+let g:ctrlp_map = '<leader>p'
+
+
+" Vim-tabber
+let g:tabber_filename_style = 'filename'
+let g:tabber_wrap_when_shifting = 1
+nnoremap <silent> <C-t> :999TabberNew<CR>:Startify<CR>
