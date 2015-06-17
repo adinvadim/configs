@@ -21,7 +21,8 @@ set wildignore=.git,*.swp,*/tmp/*
 " Оформление
 set t_Co=255
 colorscheme solarized
-set background=dark
+let g:rehash256 = 1
+set background=light
 let g:solarized_termcolors=16
 let g:solarized_visibility =  "low"
 autocmd ColorScheme * highlight RedundantSpaces ctermbg=red
@@ -154,6 +155,7 @@ let mapleader=','
 "nmap <C-t> :tabnew<cr>
 nmap <TAB> gt
 nmap <S-TAB> gT
+nmap <silent> <c-t> :tabnew<CR>:Startify<CR>
 
 nmap <Space> <PageDown>
 nmap <cr> o<ESC>k
@@ -181,6 +183,21 @@ nnoremap * *N
 filetype plugin indent on     " обязательно!
 
 "-------------------------
+"   Languages support
+"-------------------------
+
+"--- Python ---
+autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8
+\ formatoptions+=croq softtabstop=4 smartindent
+\ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+autocmd FileType pyrex setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+
+"--- Stylus ---
+autocmd BufRead,BufNewFile *.styl set filetype=styl
+autocmd Syntax styl runtime! bundle/vim-stylus/syntax/stylus.vim
+autocmd FileType styl set omnifunc=csscomplete#CompleteCSS
+
+"-------------------------
 "   Plugins
 "-------------------------
 
@@ -190,10 +207,10 @@ call vundle#rc()
 
 
 " Программирование
-" C/C++
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'SirVer/ultisnips'
 Bundle 'majutsushi/tagbar'
+Bundle 'klen/python-mode'
 
 "Bundle 'vundle'
 "
@@ -205,22 +222,25 @@ Bundle 'jszakmeister/vim-togglecursor'
 "Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
-Bundle 'Lokaltog/vim-powerline'
+Bundle 'bling/vim-airline'
+"Bundle 'Lokaltog/vim-powerline'
 Bundle 'mhinz/vim-startify'
 Bundle 'kien/ctrlp.vim'
-Bundle 'fweep/vim-tabber'
+"Bundle 'fweep/vim-tabber'
 Bundle 'Raimondi/delimitMate'
 Bundle 'tpope/vim-surround'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'TagHighlight'
 "Bundle 'gcmt/taboo.vim'
 Bundle 'junegunn/limelight.vim'
-
-
+Bundle 'bling/vim-bufferline'
+Bundle 'edkolev/tmuxline.vim'
 
 
 " Цветовые схемы
 Bundle 'vim-scripts/summerfruit256.vim'
+Bundle 'lsdr/monokai'
+Bundle 'tomasr/molokai'
 
 " Верстка
 Bundle 'mattn/emmet-vim'
@@ -231,21 +251,21 @@ Bundle 'wavded/vim-stylus'
 
 
 "-------------------------
-"Настройка плагинов
+"    Настройка плагинов
 "-------------------------
 
 
-"NERDTree
+"--- NERDTree ---
 map <leader>n :NERDTreeToggle<CR>
 
 
-"Emmet
+"--- Emmet ---
 let g:user_emmet_install_global = 0
 let g:user_emmet_leader_key = '<c-z>'
 autocmd FileType html,css,styl,EmmetInstall
 
 
-"YCM
+"--- YCM ---
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
 let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_use_ultisnips_completer = 1
@@ -254,9 +274,27 @@ let g:ycm_key_invoke_completion = '<leader><TAB>'
 nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 "POWERLINE
-let g:Powerline_symbols = "fancy"
+"let g:Powerline_symbols = "fancy"
 
-" Startify
+"--- Airline ---
+let g:airline_theme='tomorrow'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
+
+"--- Tmuxline ---
+let g:tmuxline_preset = {
+      \'a'    : '#S',
+      \'c'    : ['#(whoami)', '#(uptime | cud -d " " -f 1,2,3)'],
+      \'win'  : ['#I', '#W'],
+      \'cwin' : ['#I', '#W', '#F'],
+      \'y'    : ['%R', '%a', '%Y'],
+      \'z'    : '#H'}
+
+      "\'x'    : '#(date)',
+
+
+"--- Startify ---
 set viminfo='100,n$HOME/.vim/viminfo
 
 autocmd VimEnter *
@@ -288,25 +326,53 @@ let g:startify_skiplist = [
 	   \ '\.DS_Store'
 	   \ ]
 
-" Stylus
-autocmd BufRead,BufNewFile *.styl set filetype=styl
-autocmd Syntax styl runtime! bundle/vim-stylus/syntax/stylus.vim
-autocmd FileType styl set omnifunc=csscomplete#CompleteCSS
 
-" TagBar
+"--- TagBar ---
 nmap <leader>t :TagbarToggle<CR>
 let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
 highlight TagbarSignature guifg=Red ctermfg=Red
 
-" Whitespace
+"--- Whitespace ---
 nmap <leader>w :StripWhitespace<CR>
 
-
-" CntrlP
+"--- CntrlP ---
 let g:ctrlp_map = '<leader>p'
 
+"--- Multiple cursor ---
+let g:multi_cursor_quit_key='<C-c>'
 
 " Vim-tabber
-let g:tabber_filename_style = 'filename'
-let g:tabber_wrap_when_shifting = 1
-nnoremap <silent> <C-t> :999TabberNew<CR>:Startify<CR>
+"let g:tabber_filename_style = 'filename'
+"let g:tabber_wrap_when_shifting = 1
+"nnoremap <silent> <C-t> :999TabberNew<CR>:Startify<CR>
+
+"--- PyMode ---
+" отключаем автокомплит по коду (у нас вместо него используется jedi-vim)
+let g:pymode_rope = 0
+let g:pymode_rope_completion = 0
+let g:pymode_rope_complete_on_dot = 0
+
+" документация
+let g:pymode_doc = 0
+let g:pymode_doc_key = 'K'
+" проверка кода
+let g:pymode_lint = 1
+let g:pymode_lint_checker = "pep8"
+let g:pymode_lint_ignore="E501,W601,C0110"
+
+" провека кода после сохранения
+let g:pymode_lint_write = 1
+
+" поддержка virtualenv
+let g:pymode_virtualenv = 1
+
+" подстветка синтаксиса
+let g:pymode_syntax = 1
+let g:pymode_syntax_all = 1
+let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+let g:pymode_syntax_space_errors = g:pymode_syntax_all
+
+" отключить autofold по коду
+let g:pymode_folding = 0
+
+let g:pymode_options_max_line_length = 119
