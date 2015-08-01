@@ -5,21 +5,23 @@
 "-------------------------
 "
 filetype off
-"autocmd FileType <desired_filetypes> autocmd BufWritePre <buffer> StripWhitespace
 set showcmd
 " Включаем перенос строк по буквам, а не по словам
 set wrap
 
 set shell=/bin/bash
+"set shell=/usr/local/bin/fish
 
 " Показывать все возможные кандидаты для выбора при авто-завершении команд в командной строке
 set wildmenu
 set wildmode=list:longest
 set wildignore=.git,*.swp,*/tmp/*
+
+set iskeyword+=-
 "set wcm=<TAB>
 
 " Оформление
-set t_Co=255
+set t_Co=256
 colorscheme solarized
 let g:rehash256 = 1
 set background=light
@@ -53,9 +55,9 @@ syntax enable
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
-set list
-set listchars=tab:>·,trail:·,extends:>,precedes:<
-
+set list!
+"set listchars=tab:> eol:¬,trail:·,extends:>,precedes:<
+set listchars=tab:>·,eol:¬,trail:·,extends:>,precedes:<
 set sessionoptions+=tabpages,globals
 set tabline=%!tabber#TabLine()
 
@@ -96,21 +98,21 @@ set encoding=utf-8 " Necessary to show Unicode glyphs
 " Undo redo история изменений
 
 if version >= 700
-    set history=64
-    set undolevels=128
-    set undodir=~/.vim/undodir/
-    set undofile
-    set undolevels=1000
-    set undoreload=10000
+	set history=64
+	set undolevels=128
+	set undodir=~/.vim/undodir/
+	set undofile
+	set undolevels=1000
+	set undoreload=10000
 endif
 
 " Автоматически исполняемый скрипт
 function ModeChange()
-    if getline(1) =~ "^#!"
-        if getline(1) =~ "bin/"
-            silent !chmod a+x <afile>
-        endif
-    endif
+	if getline(1) =~ "^#!"
+	    if getline(1) =~ "bin/"
+	        silent !chmod a+x <afile>
+	    endif
+	endif
 endfunction
 au BufWritePost * call ModeChange()
 
@@ -153,15 +155,22 @@ let mapleader=','
 
 " Tabs
 "nmap <C-t> :tabnew<cr>
-nmap <TAB> gt
-nmap <S-TAB> gT
-nmap <silent> <c-t> :tabnew<CR>:Startify<CR>
+nnoremap <TAB> gt
+nnoremap <S-TAB> gT
+nnoremap j gj
+nnoremap k gk
+nnoremap <silent> <c-t> :<C-u>tabnew<CR>:Startify<CR>
+
+nnoremap <leader>s :<C-u>%s//<left>
+vnoremap <leader>s :s//<left>
 
 nmap <Space> <PageDown>
 nmap <cr> o<ESC>k
 
-" remove extra whitespace
-nmap <leader><space> :%s/\s\+$<cr>
+nnoremap <Leader><left>  :<C-u>leftabove  vnew<CR>
+nnoremap <Leader><right> :<C-u>rightbelow vnew<CR>
+nnoremap <Leader><up>    :<C-u>leftabove  new<CR>
+nnoremap <Leader><down>  :<C-u>rightbelow new<CR>
 
 " switch between current and last buffer
 nmap <leader>. <c-^>
@@ -172,7 +181,6 @@ imap <C-l> <Right>
 imap <C-h> <Left>
 imap <C-j> <Down>
 imap <C-k> <Up>
-imap <leader>
 
 
 vmap < <gv
@@ -193,9 +201,9 @@ autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8
 autocmd FileType pyrex setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 
 "--- Stylus ---
-autocmd BufRead,BufNewFile *.styl set filetype=styl
+autocmd BufRead,BufNewFile *.styl set filetype=stylus
 autocmd Syntax styl runtime! bundle/vim-stylus/syntax/stylus.vim
-autocmd FileType styl set omnifunc=csscomplete#CompleteCSS
+autocmd FileType stylus set omnifunc=csscomplete#CompleteCSS
 
 "-------------------------
 "   Plugins
@@ -212,7 +220,8 @@ Bundle 'SirVer/ultisnips'
 Bundle 'majutsushi/tagbar'
 Bundle 'klen/python-mode'
 
-"Bundle 'vundle'
+Bundle 'gmarik/vundle.git'
+
 "
 Bundle 'snipMate'
 
@@ -226,28 +235,35 @@ Bundle 'bling/vim-airline'
 "Bundle 'Lokaltog/vim-powerline'
 Bundle 'mhinz/vim-startify'
 Bundle 'kien/ctrlp.vim'
-"Bundle 'fweep/vim-tabber'
 Bundle 'Raimondi/delimitMate'
 Bundle 'tpope/vim-surround'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'TagHighlight'
-"Bundle 'gcmt/taboo.vim'
 Bundle 'junegunn/limelight.vim'
 Bundle 'bling/vim-bufferline'
 Bundle 'edkolev/tmuxline.vim'
+Bundle 'airblade/vim-gitgutter'
+Bundle 'gregsexton/MatchTag'
+Bundle 'ryanoasis/vim-webdevicons'
+"Bundle 'vim-scripts/numbers.vim'
+"Bundle 'Yggdroot/indentLine'
 
 
 " Цветовые схемы
 Bundle 'vim-scripts/summerfruit256.vim'
 Bundle 'lsdr/monokai'
 Bundle 'tomasr/molokai'
+Bundle 'cocopon/iceberg.vim'
 
 " Верстка
 Bundle 'mattn/emmet-vim'
 "Bundle 'skammer/vim-css-color'  -  coloresque better
 Bundle 'gorodinskiy/vim-coloresque'
 Bundle 'hail2u/vim-css3-syntax'
-Bundle 'wavded/vim-stylus'
+Bundle 'vim-scripts/vim-stylus'
+Bundle 'csscomb/vim-csscomb'
+Bundle 'pangloss/vim-javascript'
+Bundle 'SevInf/vim-bemhtml'
 
 
 "-------------------------
@@ -258,11 +274,30 @@ Bundle 'wavded/vim-stylus'
 "--- NERDTree ---
 map <leader>n :NERDTreeToggle<CR>
 
+" NERDTress File highlighting
+function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+	exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+	exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+endfunction
+
+call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
+call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
+call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
+call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
+call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
+call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
+call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
+call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
 
 "--- Emmet ---
-let g:user_emmet_install_global = 0
+"let g:user_emmet_install_global = 0
 let g:user_emmet_leader_key = '<c-z>'
-autocmd FileType html,css,styl,EmmetInstall
+autocmd FileType html, EmmetInstall
 
 
 "--- YCM ---
@@ -284,14 +319,14 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 
 "--- Tmuxline ---
 let g:tmuxline_preset = {
-      \'a'    : '#S',
-      \'c'    : ['#(whoami)', '#(uptime | cud -d " " -f 1,2,3)'],
-      \'win'  : ['#I', '#W'],
-      \'cwin' : ['#I', '#W', '#F'],
-      \'y'    : ['%R', '%a', '%Y'],
-      \'z'    : '#H'}
+	  \'a'    : '#S',
+	  \'c'    : ['#(whoami)', '#(uptime | cud -d " " -f 1,2,3)'],
+	  \'win'  : ['#I', '#W'],
+	  \'cwin' : ['#I', '#W', '#F'],
+	  \'y'    : ['%R', '%a', '%Y'],
+	  \'z'    : '#H'}
 
-      "\'x'    : '#(date)',
+      ""\'x'    : '#(date)',
 
 
 "--- Startify ---
@@ -334,6 +369,7 @@ highlight TagbarSignature guifg=Red ctermfg=Red
 
 "--- Whitespace ---
 nmap <leader>w :StripWhitespace<CR>
+"autocmd FileType <desired_filetypes> autocmd BufWritePre <buffer> StripWhitespace
 
 "--- CntrlP ---
 let g:ctrlp_map = '<leader>p'
@@ -376,3 +412,28 @@ let g:pymode_syntax_space_errors = g:pymode_syntax_all
 let g:pymode_folding = 0
 
 let g:pymode_options_max_line_length = 119
+
+"--- CSS3 ---
+augroup VimCSS3Syntax
+	autocmd!
+	autocmd FileType css setlocal iskeyword+=-
+	autocmd FileType styl setlocal iskeyword+=-
+	autocmd FileType styl setlocal iskeyword+=$
+augroup END
+
+"--- Web-devicons ---
+
+let g:webdevicons_enable_airline_tabline = 0
+let g:webdevicons_enable_airline_statusline = 1
+
+"-- Numbers ---
+let g:numbers_exclude = ['nerdtree', 'tagbar', 'startify']
+let g:numbers_enable = 2
+nnoremap <silent> <F2> :NumbersToggle<CR>
+
+"--- Yggdroot/indentLine ---"
+let g:indentLine_char ='︙'
+
+
+"-- BEMHTML --"
+autocmd BufRead,BufNewFile *.bemhtml set filetype=bemhtml
