@@ -4,7 +4,10 @@
     set showcmd
     " Нормальная индентация текста
     set wrap
+
     set breakindent
+
+    set noswapfile
 
     set shell=/bin/bash
     "set shell=/usr/local/bin/fish
@@ -25,10 +28,8 @@
     " Оформление
     set t_Co=256
     colorscheme solarized
-    let g:rehash256 = 1
-    set background=light
-    let g:solarized_termcolors=256
-    let g:solarized_visibility =  "low"
+    let g:enable_bold_font = 1
+
     autocmd ColorScheme * highlight RedundantSpaces ctermbg=red
 
 
@@ -90,7 +91,6 @@
     set statusline+=\ %P    "percent through file
 
     set showtabline=2
-    set guitablabel=%t\ %M
 
     set statusline=%<%f%h%m%r\ \ %{&encoding}\ 0x\ \ %l,%c%V\ %P
     set noshowmode
@@ -111,15 +111,32 @@
     endif
 
     " Автоматически исполняемый скрипт
-    function ModeChange()
-        if getline(1) =~ "^#!"
-            if getline(1) =~ "bin/"
-                silent !chmod a+x <afile>
-            endif
-        endif
-    endfunction
-    au BufWritePost * call ModeChange()
+    "function ModeChange()
+        "if getline(1) =~ "^#!"
+            "if getline(1) =~ "bin/"
+                "silent !chmod a+x <afile>
+            "endif
+        "endif
+    "endfunction
+    "au BufWritePost * call ModeChange()
 
+
+    set completeopt-=preview
+
+
+"
+" GUI
+"---------------------------
+
+    set guitablabel=%t\ %M
+    set guioptions-=m
+    set guioptions-=T
+    set guioptions-=r
+    set guioptions-=L
+    set guifont=Fira\ Code:h14
+    if has('gui_running')
+        set macligatures
+    endif
 " Search options
 "---------------------------
 
@@ -147,11 +164,10 @@
 
     let mapleader=','
 
-
     nnoremap *<cr> :nohlsearch<cr><cr>
 
-    nnoremap <TAB> gt
-    nnoremap <S-TAB> gT
+    nnoremap <silent><TAB> :<C-u>bn<CR>
+    nnoremap <silent><S-TAB> :<C-u>bp<CR>
 
     nnoremap j gj
     nnoremap k gk
@@ -172,7 +188,7 @@
     " Prev buffer
     nnoremap <leader>bp :<C-u>bp<CR>
     " Delere buffer without closing window
-    nnoremap <leader>bd :<C-u>bp<bar>sp<bar>bn<bar>bd<CR>
+    nnoremap <silent><leader>bd :<C-u>bn<bar>sp<bar>bp<bar>bd<CR>
     " Buffer's list
     nnoremap <leader>ls :<C-u>ls<CR>
     " Open tagbar
@@ -180,25 +196,72 @@
     " Delete all whitespace
     nnoremap <leader>w :StripWhitespace<CR>
     " See in plugins setting
+    " Open .vimrc
+    nnoremap <leader>v :<C-u>e ~/.vimrc<CR>
+
     "let g:ctrlp_map = '<leader>p'
     "
+    " Switch between current and last buffer
+    nmap <leader>. <c-^>
+
+    " Get the name of the current file
+    nmap <leader>fp :<C-u>echo @%<cr>
+    nmap <leader>fy :<C-u>:let @" = expand("%")<cr>
+
+
     nnoremap <Leader><left>  :<C-u>leftabove  vnew<CR>
     nnoremap <Leader><right> :<C-u>rightbelow vnew<CR>
     nnoremap <Leader><up>    :<C-u>leftabove  new<CR>
     nnoremap <Leader><down>  :<C-u>rightbelow new<CR>
 
+    " ,r
+        " Find and replace in all open buffers
+        " See http://vim.wikia.com/wiki/VimTip382
+        function! Replace()
+            let s:cword = expand('<cword>')
+            if !s:cword
+                let s:cword = input("Put the word:")
+            endif
+            let s:word = input("Replace " . s:cword . " with:")
+            :exe 'bufdo! %s/\<' . s:cword . '\>/' . s:word . '/gce'
+            :unlet! s:word
+            :unlet! s:cword
+        endfunction
+        nnoremap <Leader>r :<C-u>call Replace()<CR>
+
+    " ,R
+        " Find and replace in all open buffers
+        " See http://vim.wikia.com/wiki/VimTip382
+        function! ArgReplace()
+            let s:cword = expand('<cword>')
+            if !s:cword
+                let s:cword = input("Put the word:")
+            endif
+            let s:word = input("Replace " . s:cword . " with:")
+            let s:dir = input("in Dir:")
+            :exe 'Ack!' . s:cword . ' ' . s:dir
+            :exe 'Qargs'
+            :exe 'argdo! %s/\<' . s:cword . '\>/' . s:word . '/gce' . '| w'
+            :unlet! s:word
+            :unlet! s:cword
+        endfunction
+        nnoremap <Leader>R :<C-u>call ArgReplace()<CR>
+
     nnoremap <Space> <PageDown>
 
     nnoremap <cr> o<ESC>k
 
+    "Y from cursor position to the end of line
+    nnoremap Y y$
+
+    " Search matches are always in center
+    nnoremap n nzz
+    nnoremap N Nzz
 
     noremap <up>    <C-W>+
     noremap <down>  <C-W>-
     noremap <left>  3<C-W><
     noremap <right> 3<C-W>>
-    " Switch between current and last buffer
-    nmap <leader>. <c-^>
-
 
 
     imap <C-l> <Right>
@@ -212,29 +275,161 @@
 
     nnoremap * *N
 
+    map ё `
+    map й q
+    map ц w
+    map у e
+    map к r
+    map е t
+    map н y
+    map г u
+    map ш i
+    map щ o
+    map з p
+    map х [
+    map ъ ]
+    map ф a
+    map ы s
+    map в d
+    map а f
+    map п g
+    map р h
+    map о j
+    map л k
+    map д l
+    map ж ;
+    map э '
+    map я z
+    map ч x
+    map с c
+    map м v
+    map и b
+    map т n
+    map ь m
+    map б ,
+    map ю .
+    map Ё ~
+    map Й Q
+    map Ц W
+    map У E
+    map К R
+    map Е T
+    map Н Y
+    map Г U
+    map Ш I
+    map Щ O
+    map З P
+    map Х {
+    map Ъ }
+    map Ф A
+    map Ы S
+    map В D
+    map А F
+    map П G
+    map Р H
+    map О J
+    map Л K
+    map Д L
+    map Ж :
+    map Э "
+    map Я Z
+    map Ч X
+    map С C
+    map М V
+    map И B
+    map Т N
+    map Ь M
+    map Б <
+    map Ю >
+
 
 "   File specific
 "-------------------------
 
     "--- Python ---
-        autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8
-        \ formatoptions+=croq softtabstop=4 smartindent
-        \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
-        autocmd FileType pyrex setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+        augroup filetype_python
+            autocmd!
+            autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8
+            \ formatoptions+=croq softtabstop=4 smartindent
+            \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+            autocmd FileType pyrex setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+        augroup END
+
+    "--- CSS ---
+        augroup filetype_css
+            autocmd!
+            autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+        augroup END
 
     "--- Stylus ---
-        autocmd BufRead,BufNewFile *.styl set filetype=stylus
-        autocmd Syntax styl runtime! bundle/vim-stylus/syntax/stylus.vim
-        autocmd FileType stylus set omnifunc=csscomplete#CompleteCSS
-        autocmd FileType styl setlocal iskeyword+=-
-        autocmd FileType styl setlocal iskeyword+=$
+        augroup filetype_stylus
+            autocmd!
+            autocmd BufRead,BufNewFile *.styl set filetype=stylus
+            autocmd FileType stylus set omnifunc=csscomplete#CompleteCSS
+            autocmd FileType stylus setlocal iskeyword+=-
+            autocmd FileType stylus setlocal iskeyword+=$
+        augroup END
+
+    "--- SCSS ---
+        "au BufRead,BufNewFile *.scss set filetype=scss
+        augroup filetype_scss
+            autocmd!
+            autocmd FileType scss set iskeyword+=-
+        augroup END
+
+    "--- HTML ---
+        augroup filetype_html
+            autocmd!
+            autocmd FileType html setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+        augroup END
+
+
+    "--- Jade ---
+        augroup filetype_jade
+            autocmd!
+            autocmd BufRead,BufNewFile *.jade set filetype=jade
+            autocmd FileType jade setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+        augroup END
 
     "--- Haml ---
-        autocmd FileType jade setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-        autocmd FileType js setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+        augroup filetype_haml
+            autocmd!
+            autocmd FileType haml setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+        augroup END
+
+    "--- Yaml ---
+        augroup filetype_yaml
+            autocmd!
+            autocmd FileType yaml setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+        augroup END
+
 
     "-- BEMHTML ---
-        autocmd BufRead,BufNewFile *.bemhtml set filetype=bemhtml
+        augroup filetype_bemhtml
+            autocmd!
+            autocmd BufRead,BufNewFile *.bemhtml set filetype=bemhtml
+        augroup END
+
+    "--- Coffee ---
+        augroup filetype_coffee
+            autocmd!
+            autocmd BufRead,BufNewFile *.coffee set filetype=coffee
+            autocmd FileType coffee setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+        augroup END
+
+    "--- Js ---
+        "augroup filetype_js
+            "autocmd!
+        "augroup END
+
+    "--- TeX ---
+        augroup filetype_tex
+            autocmd!
+            autocmd BufRead,BufNewFile *.tex set filetype=tex
+            autocmd FileType tex nnoremap <leader>c :<c-u>VimtexCompileToggle<c-r>
+            autocmd FileType tex nnoremap <leader>v :<c-u>VimtexView<c-r>
+        augroup END
+
 
 
 "   Plugins
@@ -244,58 +439,55 @@
         filetype plugin indent on
         set rtp+=~/.vim/bundle/vundle
         call vundle#rc()
-        Bundle 'gmarik/vundle.git'
+        Plugin 'gmarik/vundle.git'
 
 
     " Программирование
-        Bundle 'Valloric/YouCompleteMe'
-        Bundle 'SirVer/ultisnips'
-        Bundle 'majutsushi/tagbar'
-        Bundle 'klen/python-mode'
+        Plugin 'Valloric/YouCompleteMe'
+        Plugin 'SirVer/ultisnips'
+        "Plugin 'majutsushi/tagbar'
+        Plugin 'klen/python-mode'
 
     " Удобства разные
-        Bundle 'ntpeters/vim-better-whitespace'
-        Bundle 'jszakmeister/vim-togglecursor'
-        "Bundle 'nathanaelkane/vim-indent-guides'
-        Bundle 'scrooloose/nerdtree'
-        Bundle 'scrooloose/nerdcommenter'
-        Bundle 'bling/vim-airline'
-        "Bundle 'Lokaltog/vim-powerline'
-        Bundle 'mhinz/vim-startify'
-        Bundle 'kien/ctrlp.vim'
-        Bundle 'Raimondi/delimitMate'
-        Bundle 'tpope/vim-surround'
-        Bundle 'Lokaltog/vim-easymotion'
-        Bundle 'TagHighlight'
-        Bundle 'junegunn/limelight.vim'
-        Bundle 'bling/vim-bufferline'
-        Bundle 'edkolev/tmuxline.vim'
-        Bundle 'airblade/vim-gitgutter'
-        Bundle 'gregsexton/MatchTag'
-        Bundle 'ryanoasis/vim-webdevicons'
-        Bundle 'junegunn/goyo.vim'
-        Bundle 'tpope/vim-fugitive'
-        Bundle 'scrooloose/syntastic'
-        Bundle 'ktonga/vim-follow-my-lead'
-
-
-    " Цветовые схемы
-        Bundle 'vim-scripts/summerfruit256.vim'
-        Bundle 'lsdr/monokai'
-        Bundle 'tomasr/molokai'
-        Bundle 'cocopon/iceberg.vim'
+        Plugin 'ntpeters/vim-better-whitespace'
+        Plugin 'jszakmeister/vim-togglecursor'
+        Plugin 'scrooloose/nerdtree'
+        Plugin 'scrooloose/nerdcommenter'
+        Plugin 'bling/vim-airline'
+        Plugin 'mhinz/vim-startify'
+        Plugin 'kien/ctrlp.vim'
+        Plugin 'Raimondi/delimitMate'
+        Plugin 'tpope/vim-surround'
+        Plugin 'Lokaltog/vim-easymotion'
+        Plugin 'bling/vim-bufferline'
+        Plugin 'edkolev/tmuxline.vim'
+        Plugin 'airblade/vim-gitgutter'
+        Plugin 'gregsexton/MatchTag'
+        Plugin 'tpope/vim-fugitive'
+        Plugin 'scrooloose/syntastic'
+        Plugin 'Xuyuanp/nerdtree-git-plugin'
+        Plugin 'mileszs/ack.vim'
+        Plugin 'NLKNguyen/copy-cut-paste.vim'
+        Plugin 'jlanzarotta/bufexplorer'
+        Plugin 'nelstrom/vim-qargs'
+        Plugin 'elzr/vim-json'
+        Plugin 'mxw/vim-jsx'
 
     " Верстка
-        Bundle 'mattn/emmet-vim'
-        "Bundle 'skammer/vim-css-color'  -  coloresque better
-        Bundle 'gorodinskiy/vim-coloresque'
-        Bundle 'hail2u/vim-css3-syntax'
-        Bundle 'vim-scripts/vim-stylus'
-        Bundle 'csscomb/vim-csscomb'
-        Bundle 'pangloss/vim-javascript'
-        Bundle 'SevInf/vim-bemhtml'
-        " Haml, scss, sass
-        "Bundle 'tpope/vim-haml'
+        Plugin 'mattn/emmet-vim'
+        Plugin 'gorodinskiy/vim-coloresque'
+        Plugin 'JulesWang/css.vim'
+        Plugin 'wavded/vim-stylus'
+        Plugin 'SevInf/vim-bemhtml'
+
+        Plugin 'lervag/vimtex'
+        Plugin 'kchmck/vim-coffee-script'
+        "Plugin 'cakebaker/scss-syntax.vim'
+        Plugin 'tpope/vim-haml'
+        Plugin 'digitaltoad/vim-jade'
+        Plugin 'lepture/vim-jinja'
+        Plugin 'ternjs/tern_for_vim'
+        Plugin 'heavenshell/vim-jsdoc'
 
 
 
@@ -303,176 +495,259 @@
 "    Настройка плагинов
 "-------------------------
 
-
-"--- NERDTree ---
-    map <leader>n :NERDTreeToggle<CR>
-
-    " NERDTress File highlighting
-    function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
-        exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
-        exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
-    endfunction
-
-    call NERDTreeHighlightFile('bemhtml', 'Magenta', 'none', 'Magenta', '#151515')
-    call NERDTreeHighlightFile('bemjson.js', 'Magenta', 'none', 'Magenta', '#151515')
-    call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
-    call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
-    call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
-    call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
-    call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
-    call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
-    call NERDTreeHighlightFile('bemhtml', 'Magenta', 'none', '#ff00ff', '#151515')
-    call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
-    call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
-    call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
-    call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
-    call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
-    call NERDTreeHighlightFile('py', 'Magenta', 'none', '#ff00ff', '#151515')
-
-"--- Emmet ---
-"let g:user_emmet_install_global = 0
-    let g:user_emmet_leader_key = '<c-z>'
-    autocmd FileType html, EmmetInstall
-
-
-"--- YCM ---
-    let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
-    let g:ycm_autoclose_preview_window_after_completion=1
-    let g:ycm_use_ultisnips_completer = 1
-    let g:ycm_key_invoke_completion = '<leader><TAB>'
-
-
-"--- Airline ---
-    let g:airline_theme='tomorrow'
-    let g:airline_powerline_fonts = 1
-    let g:airline#extensions#tabline#enabled = 1
-    let g:airline#extensions#tabline#fnamemod = ':t'
-
-"--- Tmuxline ---
-    let g:tmuxline_preset = {
-          \'a'    : '#S',
-          \'c'    : ['#(whoami)', '#(uptime | cud -d " " -f 1,2,3)'],
-          \'win'  : ['#I', '#W'],
-          \'cwin' : ['#I', '#W', '#F'],
-          \'y'    : ['%R', '%a', '%Y'],
-          \'z'    : '#H'}
-
-          ""\'x'    : '#(date)',
-
-
-"--- Startify ---
-    set viminfo='100,n$HOME/.vim/viminfo
-
-    autocmd VimEnter *
-                \   if !argc()
-                \ |   Startify
-                \ |   NERDTree
-                \ |   wincmd w
-                \ | endif
-
-    let g:startify_change_to_dir = 0
-    let g:startify_files_number = 8
-    let g:startify_session_persistence = 0
-    let g:startify_bookmarks = ['~/.vimrc',]
-    let g:startify_list_order = [
-            \ ['   Last recently opened files:'],
-            \ 'files',
-            \ ['   Last recently modified files in the current directory:'],
-            \ 'dir',
-            \ ['   My sessions:'],
-            \ 'sessions',
-            \ ['   My bookmarks:'],
-            \ 'bookmarks',
-            \ ]
-    let g:startify_session_dir = '~/.vim/session'
-    let g:startify_skiplist = [
-           \ 'COMMIT_EDITMSG',
-           \ $VIMRUNTIME .'/doc',
-           \ 'bundle/.*/doc',
-           \ '\.DS_Store'
-           \ ]
-
-
-"--- TagBar ---
-    let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
-    highlight TagbarSignature guifg=Red ctermfg=Red
-
-"--- CntrlP ---
-    let g:ctrlp_map = '<leader>p'
-
-"--- Multiple cursor ---
-    let g:multi_cursor_quit_key='<C-c>'
-
-
-"--- PyMode ---
-" отключаем автокомплит по коду (у нас вместо него используется jedi-vim)
-    let g:pymode_rope = 0
-    let g:pymode_rope_completion = 0
-    let g:pymode_rope_complete_on_dot = 0
-
-    " документация
-    let g:pymode_doc = 0
-    let g:pymode_doc_key = 'K'
-    " проверка кода
-    let g:pymode_lint = 1
-    let g:pymode_lint_checker = "pep8"
-    let g:pymode_lint_ignore="E501,W601,C0110"
-
-    " провека кода после сохранения
-    let g:pymode_lint_write = 1
-
-    " поддержка virtualenv
-    let g:pymode_virtualenv = 1
-
-    " подстветка синтаксиса
-    let g:pymode_syntax = 1
-    let g:pymode_syntax_all = 1
-    let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-    let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-    " отключить autofold по коду
-    let g:pymode_folding = 0
-
-    let g:pymode_options_max_line_length = 119
-
-"--- cc3 ---
-    augroup VimCSS3Syntax
-        autocmd!
-        autocmd FileType css setlocal iskeyword+=-
-    augroup END
-
-"--- Web-devicons ---
-
-    let g:webdevicons_enable_airline_tabline = 0
-    let g:webdevicons_enable_airline_statusline = 1
+    "--- Solarized ---
+        "set background=light
+        "let g:solarized_termcolors=256
+        "let g:solarized_visibility = "high"
+        "let g:solarized_contrast = "high"
+        "let g:solarized_termtrans = 1
+        "if has('gui_running')
+            set background=light
+            let g:solarized_termcolors=256
+            let g:solarized_visibility = "high"
+            let g:solarized_contrast = "high"
+            let g:solarized_termtrans = 1
+        "else
+            "set background=dark
+        "endif
 
 
 
-"--- Goyo ---
-    let g:goyo_margin_top = 1
-    function! s:goyo_enter()
-      if has('gui_running')
-        set fullscreen
-        set background=light
-        set linespace=7
-      elseif exists('$TMUX')
-        silent !tmux set status off
-      endif
-    endfunction
+    "--- NERDTree ---
+        map <leader>n :NERDTreeToggle<CR>
 
-    function! s:goyo_leave()
-      if has('gui_running')
-        set nofullscreen
-        set background=dark
-        set linespace=0
-      elseif exists('$TMUX')
-        silent !tmux set status on
-      endif
-    endfunction
+        " NERDTress File highlighting
+        function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+            exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg
+            exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+        endfunction
 
-    autocmd User GoyoEnter nested call <SID>goyo_enter()
-    autocmd User GoyoLeave nested call <SID>goyo_leave()
+        call NERDTreeHighlightFile('bemhtml', 'Magenta', 'none', 'Magenta', '#151515')
+        call NERDTreeHighlightFile('bemjson.js', 'Magenta', 'none', 'Magenta', '#151515')
+        call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
+        call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
+        call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
+        call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
+        call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
+        call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
+        call NERDTreeHighlightFile('bemhtml', 'Magenta', 'none', '#ff00ff', '#151515')
+        call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
+        call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
+        call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
+        call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
+        call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
+        call NERDTreeHighlightFile('py', 'Magenta', 'none', '#ff00ff', '#151515')
 
-"-- GitGutter --
-    let g:gitgutter_realtime = 0
+    "--- Emmet ---
+    "let g:user_emmet_install_global = 0
+        let g:user_emmet_leader_key = '<c-z>'
+        autocmd FileType html, EmmetInstall
+
+
+    "--- YCM ---
+        let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+        let g:ycm_autoclose_preview_window_after_completion=1
+        let g:ycm_use_ultisnips_completer = 1
+
+        " For TeX
+          if !exists('g:ycm_semantic_triggers')
+            let g:ycm_semantic_triggers = {}
+          endif
+          let g:ycm_semantic_triggers.tex = [
+                \ 're!\\[A-Za-z]*(ref|cite)[A-Za-z]*([^]]*])?{([^}]*, ?)*'
+                \ ]
+
+    "--- Airline ---
+        let g:airline_powerline_fonts = 1
+        let g:airline#extensions#tabline#enabled = 1
+        let g:airline#extensions#tmuxline#enabled = 0
+        let g:airline#extensions#tabline#fnamemod = ':t'
+        let g:airline_right_alt_sep = ' '
+        let g:airline_right_sep = ' '
+        let g:airline_left_alt_sep= ' '
+        let g:airline_left_sep = ' '
+
+    "--- Tmuxline ---
+      let g:tmuxline_separators = {
+          \ 'left' : ' ',
+          \ 'left_alt': ' ',
+          \ 'right' : ' ',
+          \ 'right_alt' : ' ',
+          \ 'space' : ' '}
+      let g:tmuxline_theme = 'airline_visual'
+
+    "--- Startify ---
+        set viminfo='100,n$HOME/.vim/viminfo
+
+        autocmd VimEnter *
+                    \   if !argc()
+                    \ |   Startify
+                    \ |   NERDTree
+                    \ |   wincmd w
+                    \ | endif
+
+        let g:startify_change_to_dir = 0
+        let g:startify_files_number = 8
+        let g:startify_session_persistence = 0
+        let g:startify_bookmarks = ['~/.vimrc',]
+        let g:startify_list_order = [
+                \ ['   Last recently opened files:'],
+                \ 'files',
+                \ ['   Last recently modified files in the current directory:'],
+                \ 'dir',
+                \ ['   My sessions:'],
+                \ 'sessions',
+                \ ['   My bookmarks:'],
+                \ 'bookmarks',
+                \ ]
+        let g:startify_session_dir = '~/.vim/session'
+        let g:startify_skiplist = [
+               \ 'COMMIT_EDITMSG',
+               \ $VIMRUNTIME .'/doc',
+               \ 'bundle/.*/doc',
+               \ '\.DS_Store'
+               \ ]
+
+
+    "--- TagBar ---
+        let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
+        highlight TagbarSignature guifg=Red ctermfg=Red
+
+    "--- CntrlP ---
+        let g:ctrlp_map = '<leader>p'
+        "let g:ctrlp_custom_ignore = '\v[\/](node_modules|bower_components)|(\.(swp|ico|git|svn))$'
+        let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git|(\.(jpg|mp4|png|ogv|webm)$'
+
+    "--- Multiple cursor ---
+        let g:multi_cursor_quit_key='<C-c>'
+
+
+    "--- PyMode ---
+    " отключаем автокомплит по коду (у нас вместо него используется jedi-vim)
+        let g:pymode_rope = 0
+        let g:pymode_rope_completion = 0
+        let g:pymode_rope_complete_on_dot = 0
+
+        " документация
+        let g:pymode_doc = 0
+        let g:pymode_doc_key = 'K'
+        " проверка кода
+        let g:pymode_lint = 1
+        let g:pymode_lint_checker = "pep8"
+        let g:pymode_lint_ignore="E501,W601,C0110"
+
+        " провека кода после сохранения
+        let g:pymode_lint_write = 1
+
+        " поддержка virtualenv
+        let g:pymode_virtualenv = 1
+
+        " подстветка синтаксиса
+        let g:pymode_syntax = 1
+        let g:pymode_syntax_all = 1
+        let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+        let g:pymode_syntax_space_errors = g:pymode_syntax_all
+
+        " отключить autofold по коду
+        let g:pymode_folding = 0
+
+        let g:pymode_options_max_line_length = 119
+
+    "--- cc3 ---
+        augroup VimCSS3Syntax
+            autocmd!
+            autocmd FileType css setlocal iskeyword+=-
+        augroup END
+
+    "--- Web-devicons ---
+
+        let g:webdevicons_enable_airline_tabline = 0
+        let g:webdevicons_enable_airline_statusline = 1
+
+
+
+    "--- Goyo ---
+        let g:goyo_margin_top = 1
+        function! s:goyo_enter()
+          if has('gui_running')
+            set fullscreen
+            set background=light
+            set linespace=7
+          elseif exists('$TMUX')
+            silent !tmux set status off
+          endif
+        endfunction
+
+        function! s:goyo_leave()
+          if has('gui_running')
+            set nofullscreen
+            set background=dark
+            set linespace=0
+          elseif exists('$TMUX')
+            silent !tmux set status on
+          endif
+        endfunction
+
+        autocmd User GoyoEnter nested call <SID>goyo_enter()
+        autocmd User GoyoLeave nested call <SID>goyo_leave()
+
+    "-- GitGutter --
+        let g:gitgutter_realtime = 0
+
+    "-- TeX --
+
+    "-- Syntastic --
+        let g:syntastic_enable_tex_checker = 0
+        function! JavascriptLinter(curpath)
+          let parent=1
+          let local_path=a:curpath
+          let local_jscs=local_path . '.jscsrc'
+
+          while parent <= 255
+            if filereadable(local_jscs)
+              return ['jscs']
+            endif
+            let parent = parent + 1
+            let local_path = local_path . "../"
+            let local_jscs = local_path . '.jscsrc'
+          endwhile
+
+          unlet parent local_jscs
+
+          return ['jshint']
+        endfunction
+
+        function! JscsFix()
+            "Save current cursor position"
+            let l:winview = winsaveview()
+            "Pipe the current buffer (%) through the jscs -x command"
+            % ! jscs -x
+            "Restore cursor position - this is needed as piping the file"
+            "through jscs jumps the cursor to the top"
+            call winrestview(l:winview)
+        endfunction
+        command! JscsFix :call JscsFix()
+
+        let g:syntastic_javascript_checkers=[]
+
+    "--- BufExplorer ---
+        let g:bufExplorerShowRelativePath=1
+
+    "--- Tern ---
+        let g:tern_show_signature_in_pum=1
+
+    "--- YouCompleteMe ---
+    " make YCM compatible with UltiSnips (using supertab)
+
+    "--- UltiSnips ---
+     " better key bindings for UltiSnipsExpandTrigger
+         let g:UltiSnipsExpandTrigger="<leader><tab>"
+         let g:UltiSnipsJumpForwardTrigger="<c-j>"
+         let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+
+    "--- jsdoc ---
+        let g:jsdoc_allow_input_prompt = 1
+        let g:jsdoc_input_description = 1
+        let g:jsdoc_underscore_private = 1
+        let g:jsdoc_access_descriptions = 1
 
