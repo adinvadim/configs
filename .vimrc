@@ -1,6 +1,72 @@
+"   Plugins
+"-------------------------
+"
+
+    "Настройки пакетного менеджера Vundle
+    set nocompatible              " be iMproved, required
+    filetype off                  " required
+
+    "set the runtime path to include Vundle and initialize
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+
+    Plugin 'VundleVim/Vundle.vim'
+
+
+    " Программирование
+        Plugin 'Valloric/YouCompleteMe'
+        Plugin 'SirVer/ultisnips'
+        "Plugin 'majutsushi/tagbar'
+        Plugin 'klen/python-mode'
+
+    " Удобства разные
+        Plugin 'ntpeters/vim-better-whitespace'
+        Plugin 'jszakmeister/vim-togglecursor'
+        Plugin 'scrooloose/nerdtree'
+        Plugin 'scrooloose/nerdcommenter'
+        Plugin 'bling/vim-airline'
+        Plugin 'mhinz/vim-startify'
+        Plugin 'kien/ctrlp.vim'
+        Plugin 'Raimondi/delimitMate'
+        Plugin 'tpope/vim-surround'
+        Plugin 'Lokaltog/vim-easymotion'
+        Plugin 'bling/vim-bufferline'
+        Plugin 'edkolev/tmuxline.vim'
+        Plugin 'airblade/vim-gitgutter'
+        Plugin 'gregsexton/MatchTag'
+        Plugin 'tpope/vim-fugitive'
+        Plugin 'scrooloose/syntastic'
+        Plugin 'Xuyuanp/nerdtree-git-plugin'
+        Plugin 'mileszs/ack.vim'
+        Plugin 'NLKNguyen/copy-cut-paste.vim'
+        Plugin 'jlanzarotta/bufexplorer'
+        Plugin 'nelstrom/vim-qargs'
+        Plugin 'elzr/vim-json'
+        Plugin 'mxw/vim-jsx'
+        Plugin 'editorconfig/editorconfig-vim'
+
+    " Верстка
+        Plugin 'mattn/emmet-vim'
+        Plugin 'gorodinskiy/vim-coloresque'
+        Plugin 'JulesWang/css.vim'
+        Plugin 'wavded/vim-stylus'
+        Plugin 'SevInf/vim-bemhtml'
+
+        Plugin 'lervag/vimtex'
+        Plugin 'kchmck/vim-coffee-script'
+        "Plugin 'cakebaker/scss-syntax.vim'
+        Plugin 'tpope/vim-haml'
+        Plugin 'digitaltoad/vim-jade'
+        Plugin 'lepture/vim-jinja'
+        Plugin 'ternjs/tern_for_vim'
+        Plugin 'heavenshell/vim-jsdoc'
+
+
+    call vundle#end()            " required
+    filetype plugin indent on    " required
+
 " Interface
 "-------------------------
-    filetype off
     set showcmd
     " Нормальная индентация текста
     set wrap
@@ -61,9 +127,10 @@
     set smarttab
     set expandtab
 
+
     set list!
     "set listchars=tab:> eol:¬,trail:·,extends:>,precedes:<
-    set listchars=tab:➜\ ,eol:¬,trail:·,extends:>,precedes:<
+    set listchars=trail:·,tab:»·,eol:¬
     set sessionoptions+=tabpages,globals
     set tabline=%!tabber#TabLine()
     " Backspace
@@ -128,14 +195,14 @@
 " GUI
 "---------------------------
 
-    set guitablabel=%t\ %M
-    set guioptions-=m
-    set guioptions-=T
-    set guioptions-=r
-    set guioptions-=L
-    set guifont=Fira\ Code:h14
     if has('gui_running')
+        set guitablabel=%t\ %M
+        set guioptions-=m
+        set guioptions-=T
+        set guioptions-=r
+        set guioptions-=L
         set macligatures
+        set guifont=Fira\ Code:h14
     endif
 " Search options
 "---------------------------
@@ -418,9 +485,9 @@
         augroup END
 
     "--- Js ---
-        "augroup filetype_js
-            "autocmd!
-        "augroup END
+        augroup filetype_js
+             autocmd FileType javascript setlocal omnifunc=tern#Complete
+        augroup END
 
     "--- TeX ---
         augroup filetype_tex
@@ -429,67 +496,6 @@
             autocmd FileType tex nnoremap <leader>c :<c-u>VimtexCompileToggle<c-r>
             autocmd FileType tex nnoremap <leader>v :<c-u>VimtexView<c-r>
         augroup END
-
-
-
-"   Plugins
-"-------------------------
-
-    "Настройки пакетного менеджера Vundle
-        filetype plugin indent on
-        set rtp+=~/.vim/bundle/vundle
-        call vundle#rc()
-        Plugin 'gmarik/vundle.git'
-
-
-    " Программирование
-        Plugin 'Valloric/YouCompleteMe'
-        Plugin 'SirVer/ultisnips'
-        "Plugin 'majutsushi/tagbar'
-        Plugin 'klen/python-mode'
-
-    " Удобства разные
-        Plugin 'ntpeters/vim-better-whitespace'
-        Plugin 'jszakmeister/vim-togglecursor'
-        Plugin 'scrooloose/nerdtree'
-        Plugin 'scrooloose/nerdcommenter'
-        Plugin 'bling/vim-airline'
-        Plugin 'mhinz/vim-startify'
-        Plugin 'kien/ctrlp.vim'
-        Plugin 'Raimondi/delimitMate'
-        Plugin 'tpope/vim-surround'
-        Plugin 'Lokaltog/vim-easymotion'
-        Plugin 'bling/vim-bufferline'
-        Plugin 'edkolev/tmuxline.vim'
-        Plugin 'airblade/vim-gitgutter'
-        Plugin 'gregsexton/MatchTag'
-        Plugin 'tpope/vim-fugitive'
-        Plugin 'scrooloose/syntastic'
-        Plugin 'Xuyuanp/nerdtree-git-plugin'
-        Plugin 'mileszs/ack.vim'
-        Plugin 'NLKNguyen/copy-cut-paste.vim'
-        Plugin 'jlanzarotta/bufexplorer'
-        Plugin 'nelstrom/vim-qargs'
-        Plugin 'elzr/vim-json'
-        Plugin 'mxw/vim-jsx'
-
-    " Верстка
-        Plugin 'mattn/emmet-vim'
-        Plugin 'gorodinskiy/vim-coloresque'
-        Plugin 'JulesWang/css.vim'
-        Plugin 'wavded/vim-stylus'
-        Plugin 'SevInf/vim-bemhtml'
-
-        Plugin 'lervag/vimtex'
-        Plugin 'kchmck/vim-coffee-script'
-        "Plugin 'cakebaker/scss-syntax.vim'
-        Plugin 'tpope/vim-haml'
-        Plugin 'digitaltoad/vim-jade'
-        Plugin 'lepture/vim-jinja'
-        Plugin 'ternjs/tern_for_vim'
-        Plugin 'heavenshell/vim-jsdoc'
-
-
 
 
 "    Настройка плагинов
@@ -504,7 +510,7 @@
         "if has('gui_running')
             set background=light
             let g:solarized_termcolors=256
-            let g:solarized_visibility = "high"
+            let g:solarized_visibility = "low"
             let g:solarized_contrast = "high"
             let g:solarized_termtrans = 1
         "else
@@ -522,21 +528,21 @@
             exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
         endfunction
 
-        call NERDTreeHighlightFile('bemhtml', 'Magenta', 'none', 'Magenta', '#151515')
-        call NERDTreeHighlightFile('bemjson.js', 'Magenta', 'none', 'Magenta', '#151515')
-        call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
-        call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
-        call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
-        call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
-        call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
-        call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
-        call NERDTreeHighlightFile('bemhtml', 'Magenta', 'none', '#ff00ff', '#151515')
-        call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
-        call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
-        call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
-        call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
-        call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
-        call NERDTreeHighlightFile('py', 'Magenta', 'none', '#ff00ff', '#151515')
+        "call NERDTreeHighlightFile('bemhtml', 'Magenta', 'none', 'Magenta', 'none')
+        "call NERDTreeHighlightFile('bemjson.js', 'Magenta', 'none', 'Magenta', 'none')
+        "call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', 'none')
+        "call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', 'none')
+        "call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', 'none')
+        "call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', 'none')
+        "call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', 'none')
+        "call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', 'none')
+        "call NERDTreeHighlightFile('bemhtml', 'Magenta', 'none', '#ff00ff', 'none')
+        "call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', 'none')
+        "call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', 'none')
+        "call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', 'none')
+        "call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', 'none')
+        "call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', 'none')
+        "call NERDTreeHighlightFile('py', 'Magenta', 'none', '#ff00ff', 'none')
 
     "--- Emmet ---
     "let g:user_emmet_install_global = 0
