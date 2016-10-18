@@ -62,6 +62,12 @@
         Plugin 'heavenshell/vim-jsdoc'
 
 
+    " Colorcheme
+        Plugin 'flazz/vim-colorschemes'
+        Plugin 'altercation/vim-colors-solarized'
+        Plugin 'ColorSchemeMenuMaker'
+
+
     call vundle#end()            " required
     filetype plugin indent on    " required
 
