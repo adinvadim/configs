@@ -25,6 +25,7 @@
         Plugin 'scrooloose/nerdtree'
         Plugin 'scrooloose/nerdcommenter'
         Plugin 'bling/vim-airline'
+        Plugin 'vim-airline/vim-airline-themes'
         Plugin 'mhinz/vim-startify'
         Plugin 'kien/ctrlp.vim'
         Plugin 'Raimondi/delimitMate'
@@ -508,20 +509,12 @@
 "-------------------------
 
     "--- Solarized ---
-        "set background=light
-        "let g:solarized_termcolors=256
-        "let g:solarized_visibility = "high"
-        "let g:solarized_contrast = "high"
-        "let g:solarized_termtrans = 1
-        "if has('gui_running')
-            set background=light
-            let g:solarized_termcolors=256
-            let g:solarized_visibility = "low"
-            let g:solarized_contrast = "high"
-            let g:solarized_termtrans = 1
-        "else
-            "set background=dark
-        "endif
+        let g:solarized_termtrans=1    "default value is 0
+        let g:solarized_termcolors=256    "default value is 16
+        let g:solarized_visibility="low"    "default value is normal
+        syntax enable
+        set background=dark
+        colorscheme solarized
 
 
 
