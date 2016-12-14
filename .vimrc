@@ -1,5 +1,6 @@
 "   Plugins
 "-------------------------
+
 "
 
     "Настройки пакетного менеджера Vundle
@@ -15,7 +16,7 @@
 
     " Программирование
         Plugin 'Valloric/YouCompleteMe'
-        Plugin 'SirVer/ultisnips'
+        "Plugin 'SirVer/ultisnips'
         "Plugin 'majutsushi/tagbar'
         Plugin 'klen/python-mode'
 
@@ -43,10 +44,9 @@
         Plugin 'jlanzarotta/bufexplorer'
         Plugin 'nelstrom/vim-qargs'
         Plugin 'elzr/vim-json'
-        Plugin 'mxw/vim-jsx'
         Plugin 'editorconfig/editorconfig-vim'
 
-    " Верстка
+    " Frontend
         Plugin 'mattn/emmet-vim'
         Plugin 'gorodinskiy/vim-coloresque'
         Plugin 'JulesWang/css.vim'
@@ -59,8 +59,10 @@
         Plugin 'tpope/vim-haml'
         Plugin 'digitaltoad/vim-jade'
         Plugin 'lepture/vim-jinja'
-        Plugin 'ternjs/tern_for_vim'
         Plugin 'heavenshell/vim-jsdoc'
+        Plugin 'git://github.com/pangloss/vim-javascript.git'
+        Plugin 'ternjs/tern_for_vim'
+        Plugin 'mxw/vim-jsx'
 
 
     " Colorcheme
@@ -552,7 +554,7 @@
     "--- YCM ---
         let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
         let g:ycm_autoclose_preview_window_after_completion=1
-        let g:ycm_use_ultisnips_completer = 1
+        "let g:ycm_use_ultisnips_completer = 1
 
         " For TeX
           if !exists('g:ycm_semantic_triggers')
