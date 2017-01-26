@@ -45,6 +45,7 @@
         Plugin 'elzr/vim-json'
         Plugin 'mxw/vim-jsx'
         Plugin 'editorconfig/editorconfig-vim'
+        Plugin 'Chiel92/vim-autoformat'
 
     " Верстка
         Plugin 'mattn/emmet-vim'
@@ -59,7 +60,7 @@
         Plugin 'tpope/vim-haml'
         Plugin 'digitaltoad/vim-jade'
         Plugin 'lepture/vim-jinja'
-        Plugin 'ternjs/tern_for_vim'
+        "Plugin 'ternjs/tern_for_vim'
         Plugin 'heavenshell/vim-jsdoc'
 
 
@@ -89,6 +90,14 @@
     set wildmenu
     set wildmode=list:longest
     set wildignore=.git,*.swp,*/tmp/*
+
+
+    " Disable bell
+    " see http://vim.wikia.com/wiki/Disable_beeping
+    set noerrorbells visualbell t_vb=
+    if has('autocmd')
+        autocmd GUIEnter * set visualbell t_vb=
+    endif
 
     set iskeyword+=-
     "set wcm=<TAB>
@@ -492,9 +501,9 @@
         augroup END
 
     "--- Js ---
-        augroup filetype_js
-             autocmd FileType javascript setlocal omnifunc=tern#Complete
-        augroup END
+        "augroup filetype_js
+             "autocmd FileType javascript setlocal omnifunc=tern#Complete
+        "augroup END
 
     "--- TeX ---
         augroup filetype_tex
