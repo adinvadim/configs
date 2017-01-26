@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/Users/adinvadim/sandbox/vps/frontend/themes/new/.enb'
+let g:netrw_dirhist_2='/Users/adinvadim/sandbox/vps/frontend/themes/new/libs/bem-forms'
+let g:netrw_dirhist_3='/Users/adinvadim/sandbox/vps/frontend/themes/new/libs/bem-forms/common.blocks'
+let g:netrw_dirhist_4='/Users/adinvadim/sandbox/vps/frontend/themes/new/libs/bem-forms/common.blocks/form-field'
+let g:netrw_dirhist_5='/Users/adinvadim/sandbox/vps/frontend/themes/new/libs/bem-forms/common.blocks'
+let g:netrw_dirhist_6='/Users/adinvadim/sandbox/vps/frontend/themes/new/libs/bem-forms'
